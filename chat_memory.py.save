@@ -1,0 +1,84 @@
+"""
+Memory chatbot - Remembers Everytghing
+
+"""
+
+import os
+from openai import openAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = openAI(
+   api_key=os.getenv('GROQ_API_KEY'),
+   base_url="https://api.groq.com/openai/v1"
+ )
+
+class MemoryBot:
+   def __init__(self,persona=("helpful assistant"):
+        self.history = [{"role": "system", "content": f"You are a (persona)."}]
+
+   def chat(self, msg):
+       self.history.append({"role": "user", "content": msg})
+  
+
+       response = client.chat.completions.create(
+          model="llama-3.3-70b-versatile",
+          messages=self.history,
+          temperature=0.7,
+          max_tokens=400
+        )
+
+      reply = response.choices[0].message.content
+      self.history.append({"role": "assistant", "content": reply})
+      return reply
+
+     def show_memory(self):
+        print("\n" + "="*60)
+        for msg in self.history[1:]:  # Skip system
+            role = "YOU" if msg["role"] == "user" else "AI"
+            print(f"{role}: {msg['content']}\n")
+        print("="*60)
+
+# RUN IT
+bot = MemoryBot("Python tutor who remembers student's progress")
+
+print("🧠 MEMORY CHATBOT - I remember everything!\n")
+
+while True:
+    user = input("You: ")
+    if user.lower() in ['quit', 'exit']: break
+    if user.lower() == 'memory': 
+        bot.show_memory()
+        continue
+  """
+Memory Chatbot - Remembers Everything
+"""
+
+import os
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv('GROQ_API_KEY'),
+    base_url="https://api.groq.com/openai/v1"
+)
+
+class MemoryBot:
+    def __init__(self, persona="helpful assistant"):
+        self.history = [{"role": "system", "content": f"You are a {persona}."}]
+    
+    def chat(self, msg):
+        self.history.append({"role": "user", "content": msg})
+        
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=self.history,
+            temperature=0.7,
+            max_tokens=400
+        )
+        
+        reply = response.choices[0].message.content
+        self.history.append({"role": "assist

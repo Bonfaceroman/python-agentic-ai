@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Content Generator - Professional Content Creation Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* ====== BASE STYLES ====== */
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {font-family: 'Inter', sans-serif; background:#ffffff; color:#1a1a1a; line-height:1.6; font-size:16px;}
+    a {text-decoration:none;}
+    button {cursor:pointer;}
+
+    /* ====== NAVIGATION ====== */
+    .nav {background:#ffffff; border-bottom:1px solid #e5e7eb; position:sticky; top:0; z-index:100; backdrop-filter:blur(10px);}
+    .nav-container {max-width:1200px; margin:0 auto; padding:0 24px; display:flex; justify-content:space-between; align-items:center; height:72px;}
+    .nav-logo {font-size:24px; font-weight:700; color:#1a1a1a; display:flex; align-items:center; gap:8px;}
+    .nav-links {display:flex; gap:24px; align-items:center;}
+    .nav-link {color:#6b7280; font-weight:500; font-size:15px; transition:color 0.2s;}
+    .nav-link:hover {color:#1a1a1a;}
+    .nav-cta {background:#2563eb; color:white; padding:10px 20px; border-radius:8px; font-weight:600; border:none; transition:all 0.2s;}
+    .nav-cta:hover {background:#1d4ed8; transform:translateY(-1px); box-shadow:0 4px 12px rgba(37,99,235,0.2);}
+
+    /* ====== HERO ====== */
+    .hero {background:linear-gradient(180deg, #f9fafb 0%, #ffffff 100%); padding:80px 24px 60px; text-align:center; border-bottom:1px solid #e5e7eb;}
+    .hero-container {max-width:800px; margin:0 auto;}
+    .hero-badge {display:inline-block; background:#eff6ff; color:#2563eb; padding:6px 12px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:24px;}
+    .hero h1 {font-size:56px; font-weight:700; line-height:1.1; margin-bottom:20px; color:#1a1a1a;}
+    .hero p {font-size:20px; color:#6b7280; margin-bottom:32px;}
+    .hero-ctas {display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
+    .btn-primary {background:#2563eb; color:white; padding:14px 28px; border-radius:10px; font-weight:600; display:inline-flex; align-items:center; gap:8px; border:none; transition:all 0.2s;}
+    .btn-primary:hover {background:#1d4ed8; transform:translateY(-2px); box-shadow:0 12px 24px rgba(37,99,235,0.2);}
+    .btn-secondary {background:white; color:#1a1a1a; padding:14px 28px; border-radius:10px; border:2px solid #e5e7eb; font-weight:600; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;}
+    .btn-secondary:hover {border-color:#2563eb; color:#2563eb; transform:translateY(-2px);}
+
+    /* ====== MAIN ====== */
+    .main-container {max-width:1000px; margin:0 auto; padding:60px 24px;}
+    .section-header {text-align:center; margin-bottom:48px;}
+    .section-header h2 {font-size:32px; font-weight:700; margin-bottom:12px;}
+    .section-header p {font-size:18px; color:#6b7280;}
+
+    .content-types {display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:48px;}
+    .type-card {background:white; border:2px solid #e5e7eb; border-radius:12px; padding:20px; cursor:pointer; transition:all 0.2s; text-align:center;}
+    .type-card:hover {border-color:#2563eb; transform:translateY(-4px); box-shadow:0 12px 24px rgba(0,0,0,0.06);}
+    .type-card.active {border-color:#2563eb; background:#eff6ff;}
+    .type-icon {font-size:32px; margin-bottom:12px; display:block;}
+    .type-name {font-size:15px; font-weight:600; margin-bottom:4px;}
+    .type-desc {font-size:13px; color:#6b7280;}
+
+    /* ====== INPUT CARD ====== */
+    .input-card {background:white; border:1px solid #e5e7eb; border-radius:12px; padding:32px; margin-bottom:32px; box-shadow:0 1px 3px rgba(0,0,0,0.02);}
+    .form-label {display:block; font-size:14px; font-weight:600; margin-bottom:8px;}
+    .form-helper {font-size:13px; color:#6b7280; margin-bottom:12px;}
+    .form-textarea {width:100%; min-height:140px; padding:16px; border:2px solid #e5e7eb; border-radius:10px; font-size:15px; resize:vertical; background:#fafafa; transition:all 0.2s;}
+    .form-textarea:focus {outline:none; border-color:#2563eb; background:white; box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+    .form-textarea::placeholder {color:#9ca3af;}
+    .generate-btn {width:100%; background:#2563eb; color:white; padding:16px; border-radius:10px; font-size:16px; font-weight:600; border:none; margin-top:20px; transition:all 0.2s; display:flex; justify-content:center; align-items:center; gap:8px;}
+    .generate-btn:hover:not(:disabled) {background:#1d4ed8; transform:translateY(-2px); box-shadow:0 12px 24px rgba(37,99,235,0.2);}
+    .generate-btn:disabled {background:#9ca3af; cursor:not-allowed;}
+
+    /* ====== LOADING ====== */
+    .loading-state {display:none; text-align:center; padding:48px; background:white; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:32px;}
+    .loading-state.active {display:block;}
+    .spinner {width:48px; height:48px; border:4px solid #e5e7eb; border-top-color:#2563eb; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px;}
+    .loading-text {font-size:15px; color:#6b7280; font-weight:500;}
+    @keyframes spin {to {transform:rotate(360deg);}}
+
+    /* ====== OUTPUT CARD ====== */
+    .output-card {display:none; background:white; border:1px solid #e5e7eb; border-radius:12px; padding:32px; box-shadow:0 1px 3px rgba(0,0,0,0.02);}
+    .output-card.active {display:block;}
+    .output-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;}
+    .output-title {font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px;}
+    .output-actions {display:flex; gap:8px;}
+    .action-btn {padding:8px 16px; border:2px solid #e5e7eb; background:white; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s;}
+    .action-btn:hover {border-color:#2563eb; color:#2563eb;}
+    .output-content {background:#fafafa; padding:24px; border-radius:8px; white-space:pre-wrap; line-height:1.8; color:#1a1a1a; font-size:15px; max-height:600px; overflow-y:auto; opacity:0; transition:opacity 0.5s;}
+
+    /* ====== FOOTER ====== */
+    .footer {background:#f9fafb; border-top:1px solid #e5e7eb; padding:48px 24px; text-align:center;}
+    .footer-links {display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-bottom:24px;}
+    .footer-link {color:#6b7280; font-size:14px; font-weight:500;}
+    .footer-link:hover {color:#2563eb;}
+    .footer-text {color:#9ca3af; font-size:14px;}
+
+    /* ====== RESPONSIVE ====== */
+    @media(max-width:768px){.content-types{grid-template-columns:repeat(2,1fr);}.output-actions{flex-direction:column;}.action-btn{width:100%;}}
+    @media(max-width:480px){.content-types{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">✨ ContentAI</a>
+        <div class="nav-links">
+            <a href="#tools" class="nav-link">Tools</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#resources" class="nav-link">Resources</a>
+            <a href="#login" class="nav-link">Login</a>
+            <button class="nav-cta">Try for free</button>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-container">
+        <span class="hero-badge">AI-Powered Content Generation</span>
+        <h1>Create Professional Content in Seconds</h1>
+        <p>Generate blog posts, social media content, emails, and more with AI. Save hours while maintaining quality.</p>
+        <div class="hero-ctas">
+            <button class="btn-primary" onclick="scrollToGenerator()">Start Creating →</button>
+            <button class="btn-secondary">See Examples</button>
+        </div>
+    </div>
+</section>
+
+<!-- MAIN -->
+<main class="main-container" id="tools">
+    <div class="section-header">
+        <h2>Choose Your Content Type</h2>
+        <p>Select the type of content you want to generate</p>
+    </div>
+
+    <div class="content-types">
+        <div class="type-card active" data-type="blog" onclick="selectType('blog')">📝<div>Blog Post</div><div>Long-form articles</div></div>
+        <div class="type-card" data-type="twitter" onclick="selectType('twitter')">🐦<div>Twitter</div><div>Engaging tweets</div></div>
+        <div class="type-card" data-type="linkedin" onclick="selectType('linkedin')">💼<div>LinkedIn</div><div>Professional posts</div></div>
+        <div class="type-card" data-type="instagram" onclick="selectType('instagram')">📸<div>Instagram</div><div>Captions & hashtags</div></div>
+        <div class="type-card" data-type="facebook" onclick="selectType('facebook')">👥<div>Facebook</div><div>Community posts</div></div>
+        <div class="type-card" data-type="email" onclick="selectType('email')">✉️<div>Email</div><div>Professional emails</div></div>
+        <div class="type-card" data-type="product" onclick="selectType('product')">🛍️<div>Product</div><div>Descriptions & copy</div></div>
+    </div>
+
+    <div class="input-card">
+        <label class="form-label">Describe what you want to create</label>
+        <span class="form-helper">Include tone, length, key points</span>
+        <textarea id="description" class="form-textarea" placeholder="Example: Write a 500-word blog post about morning exercise for busy professionals."></textarea>
+        <button class="generate-btn" id="generateBtn" onclick="generateContent()">Generate Content ✨</button>
+    </div>
+
+    <div class="loading-state" id="loadingState">
+        <div class="spinner"></div>
+        <p class="loading-text">Creating your content...</p>
+    </div>
+
+    <div class="output-card" id="outputCard">
+        <div class="output-header">
+            <h3 class="output-title">✅ Your Content</h3>
+            <div class="output-actions">
+                <button class="action-btn" onclick="copyContent()">📋 Copy</button>
+                <button class="action-btn" onclick="downloadContent()">💾 Download</button>
+                <button class="action-btn" onclick="resetForm()">🔄 New</button>
+            </div>
+        </div>
+        <div class="output-content" id="outputContent"></div>
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-links">
+        <a href="#about" class="footer-link">About</a>
+        <a href="#pricing" class="footer-link">Pricing</a>
+        <a href="#blog" class="footer-link">Blog</a>
+        <a href="#help" class="footer-link">Help Center</a>
+        <a href="#privacy" class="footer-link">Privacy</a>
+        <a href="#terms" class="footer-link">Terms</a>
+    </div>
+    <p class="footer-text">© 2024 ContentAI. All rights reserved.</p>
+</footer>
+
+<script>
+    let currentType = 'blog';
+    let generatedContent = '';
+    let currentFilename = '';
+
+    function selectType(type){
+        currentType = type;
+        document.querySelectorAll('.type-card').forEach(card=>card.classList.remove('active'));
+        document.querySelector(`[data-type="${type}"]`).classList.add('active');
+    }
+
+    function scrollToGenerator(){
+        document.getElementById('tools').scrollIntoView({behavior:'smooth'});
+        document.getElementById('description').focus();
+    }
+
+    async function generateContent(){
+        const description = document.getElementById('description').value.trim();
+        if(!description){alert('Please describe what you want to create'); return;}
+        document.getElementById('generateBtn').disabled=true;
+        document.getElementById('loadingState').classList.add('active');
+        document.getElementById('outputCard').classList.remove('active');
+        document.getElementById('outputContent').textContent='';
+        
+        try{
+            const res = await fetch('/generate',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({content_type:currentType, description})
+            });
+            const data = await res.json();
+            if(data.error) throw new Error(data.error);
+
+            generatedContent = data.content;
+            currentFilename = data.filename;
+            document.getElementById('outputCard').classList.add('active');
+
+            // Typing animation
+            const outputEl = document.getElementById('outputContent');
+            outputEl.style.opacity='1';
+            let i=0;
+            const interval=setInterval(()=>{
+                outputEl.textContent+=generatedContent.charAt(i);
+                i++;
+                if(i>=generatedContent.length) clearInterval(interval);
+            },10);
+        }catch(err){alert('Error: '+err.message);}
+        finally{
+            document.getElementById('loadingState').classList.remove('active');
+            document.getElementById('generateBtn').disabled=false;
+        }
+    }
+
+    function copyContent(){
+        navigator.clipboard.writeText(generatedContent);
+        alert('Copied to clipboard!');
+    }
+
+    function downloadContent(){
+        window.location.href='/download/'+currentFilename;
+    }
+
+    function resetForm(){
+        document.getElementById('outputCard').classList.remove('active');
+        document.getElementById('description').value='';
+        window.scrollTo({top:0, behavior:'smooth'});
+    }
+</script>
+</body>
+</html>
